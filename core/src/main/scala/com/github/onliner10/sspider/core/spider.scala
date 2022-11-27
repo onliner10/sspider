@@ -1,14 +1,8 @@
-package com.github.onliner10.sspider
+package com.github.onliner10.sspider.core
 
-import cats.Traverse
-import cats.data.{EitherNec, NonEmptyChain}
+import cats.effect.IO
 import cats.free.Free
 import cats.free.Free.liftF
-import cats.implicits.*
-import cats.syntax.all.*
-import cats.arrow.FunctionK
-import cats.{Id, ~>}
-import cats.effect.IO
 
 type HttpResponseMessage = String
 
@@ -31,7 +25,15 @@ object Spider {
 
   def log[T](level: LogLevel, reason: String): Spider[T, Unit] =
     liftF(Log(level, reason))
-}
 
-sealed trait Sink[A]:
-  def init(): IO[Unit]
+  private def runWithResource[T, R](
+      spider: Spider[T, Unit],
+      sink: R => T => IO[Unit]
+  )(resource: R): IO[Unit] =
+    val sinker = sink(resource)
+
+    spider.foldMap(SpiderCompiler.compile(sinker))
+
+  def run[T, R](spider: Spider[T, Unit], sink: Sink[T, R]): IO[Unit] =
+    sink.handle.use(runWithResource(spider, sink.sink))
+}
