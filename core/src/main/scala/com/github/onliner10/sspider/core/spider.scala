@@ -3,11 +3,12 @@ package com.github.onliner10.sspider.core
 import cats.effect.IO
 import cats.free.Free
 import cats.free.Free.liftF
+import io.lemonlabs.uri.Url
 
 type Spider[T, A] = Free[SpiderA[T, _], A]
 
 object Spider {
-  def fetch[T](url: String): Spider[T, String] =
+  def fetch[T](url: Url): Spider[T, String] =
     liftF(Fetch(url))
 
   def yieldResult[T](item: T): Spider[T, Unit] =

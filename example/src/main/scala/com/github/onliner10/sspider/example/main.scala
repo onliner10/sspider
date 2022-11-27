@@ -8,6 +8,7 @@ import cats.~>
 import com.github.onliner10.sspider.core.Spider._
 import com.github.onliner10.sspider.core._
 import com.github.onliner10.sspider.sinks.csv.CsvSink
+import io.lemonlabs.uri.Url
 
 //https://www.scrapethissite.com/pages/forms/
 case class HockeyTeam(
@@ -17,13 +18,15 @@ case class HockeyTeam(
     losses: Int
 )
 
-def extractLinks(resp: String): List[String] =
-  List("example.com/1", "example.com/2", "example.com/3", "example.com/4")
+def extractLinks(resp: String): List[Url] =
+  List("example.com/1", "example.com/2", "example.com/3", "example.com/4").map(
+    Url.parse
+  )
 
-def subSpider(url: String): Spider[HockeyTeam, Unit] =
+def subSpider(url: Url): Spider[HockeyTeam, Unit] =
   for
     body <- fetch(url)
-    shouldFail = url.endsWith("2")
+    shouldFail = url.path.toString.endsWith("2")
 
     dummyRecord = HockeyTeam(body, 2012, 1, 1)
 
@@ -35,7 +38,7 @@ def subSpider(url: String): Spider[HockeyTeam, Unit] =
 def rootSpider: Spider[HockeyTeam, Unit] =
   for
     _ <- log(LogLevel.Info, "Starting root spider")
-    body <- fetch("https://www.scrapethissite.com/pages/forms/")
+    body <- fetch(Url.parse("https://www.scrapethissite.com/pages/forms/"))
     links = extractLinks(body)
 
     _ <- Traverse[List].traverse(links)(subSpider)

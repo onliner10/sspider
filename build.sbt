@@ -14,19 +14,17 @@ lazy val dependencies =
   new {
     val catsFreeV = "2.9.0"
     val catsEffectV = "3.4.1"
+    val scalaUriV = "4.0.3"
 
     val catsFree = "org.typelevel" %% "cats-free" % catsFreeV
     val catsEffect = "org.typelevel" %% "cats-effect" % catsEffectV
+    val scalaUri = "io.lemonlabs" %% "scala-uri" % scalaUriV
   }
 
 lazy val commonDependencies = Seq(
   dependencies.catsFree,
   dependencies.catsEffect
 )
-
-// https://mvnrepository.com/artifact/org.typelevel/cats-free
-libraryDependencies += "org.typelevel" %% "cats-free" % "2.9.0"
-libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.1"
 
 lazy val settings =
   Seq()
@@ -38,7 +36,9 @@ lazy val core = (project in file("core"))
   .settings(
     settings,
     name := "sspider-core",
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= commonDependencies ++ Seq(
+      dependencies.scalaUri
+    )
   )
 
 lazy val csvSink = (project in file("sinks/csv"))
