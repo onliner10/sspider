@@ -1,7 +1,7 @@
 package com.github.onliner10.sspider.core
 
-import cats.effect.kernel.Resource
 import cats.effect.IO
+import cats.effect.kernel.Resource
 
 trait Sink[A, R]:
   def handle: Resource[IO, R]

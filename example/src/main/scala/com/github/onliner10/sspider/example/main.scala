@@ -17,7 +17,7 @@ case class HockeyTeam(
     losses: Int
 )
 
-def extractLinks(resp: HttpResponseMessage): List[String] =
+def extractLinks(resp: String): List[String] =
   List("example.com/1", "example.com/2", "example.com/3", "example.com/4")
 
 def subSpider(url: String): Spider[HockeyTeam, Unit] =

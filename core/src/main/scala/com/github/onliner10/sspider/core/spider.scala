@@ -4,20 +4,10 @@ import cats.effect.IO
 import cats.free.Free
 import cats.free.Free.liftF
 
-type HttpResponseMessage = String
-
-enum LogLevel:
-  case Info, Warning, Error
-
-sealed trait SpiderA[T, A]
-case class Fetch[T](url: String) extends SpiderA[T, HttpResponseMessage]
-case class YieldResult[T](item: T) extends SpiderA[T, Unit]
-case class Log[T](level: LogLevel, reason: String) extends SpiderA[T, Unit]
-
 type Spider[T, A] = Free[SpiderA[T, _], A]
 
 object Spider {
-  def fetch[T](url: String): Spider[T, HttpResponseMessage] =
+  def fetch[T](url: String): Spider[T, String] =
     liftF(Fetch(url))
 
   def yieldResult[T](item: T): Spider[T, Unit] =
