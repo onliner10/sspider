@@ -13,6 +13,7 @@ ThisBuild / scalacOptions ++= {
 
 // https://mvnrepository.com/artifact/org.typelevel/cats-free
 libraryDependencies += "org.typelevel" %% "cats-free" % "2.9.0"
+libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.1"
 
 lazy val root = (project in file("."))
   .settings(

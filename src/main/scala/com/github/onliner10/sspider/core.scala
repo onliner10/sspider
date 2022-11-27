@@ -8,6 +8,7 @@ import cats.implicits.*
 import cats.syntax.all.*
 import cats.arrow.FunctionK
 import cats.{Id, ~>}
+import cats.effect.IO
 
 type HttpResponseMessage = String
 
@@ -32,3 +33,5 @@ object Spider {
     liftF(Log(level, reason))
 }
 
+sealed trait Sink[A]:
+  def init(): IO[Unit]
