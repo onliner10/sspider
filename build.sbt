@@ -21,9 +21,29 @@ lazy val dependencies =
     val scalaUri = "io.lemonlabs" %% "scala-uri" % scalaUriV
   }
 
+lazy val testDependencies =
+  new {
+    val scalaCheckV = "1.15.4"
+    val scalaTestPlusV = "3.2.14.0"
+    val scalaticV = "3.2.14"
+    val scalaTestV = "3.2.14"
+
+    val scalatic = "org.scalactic" %% "scalactic" % "3.2.14" % "test"
+    val scalaTest = "org.scalatest" %% "scalatest" % scalaTestV % "test"
+    val scalaCheck = "org.scalacheck" %% "scalacheck" % scalaCheckV % "test"
+    val scalaTestPlus = "org.scalatestplus" %% "scalacheck-1-17" % scalaTestPlusV % "test"
+  }
+
 lazy val commonDependencies = Seq(
   dependencies.catsFree,
   dependencies.catsEffect
+)
+
+lazy val commonTestDependencies = Seq(
+  testDependencies.scalaCheck,
+  testDependencies.scalaTestPlus,
+  testDependencies.scalatic,
+  testDependencies.scalaTest
 )
 
 lazy val settings =
@@ -36,7 +56,7 @@ lazy val core = (project in file("core"))
   .settings(
     settings,
     name := "sspider-core",
-    libraryDependencies ++= commonDependencies ++ Seq(
+    libraryDependencies ++= commonDependencies ++ commonTestDependencies ++ Seq(
       dependencies.scalaUri
     )
   )
@@ -45,7 +65,7 @@ lazy val csvSink = (project in file("sinks/csv"))
   .settings(
     name := "sspider-csv-sink",
     settings,
-    libraryDependencies ++= commonDependencies
+    libraryDependencies ++= commonDependencies ++ commonTestDependencies
   )
   .dependsOn(core)
 
