@@ -3,12 +3,18 @@ package com.github.onliner10.sspider.core.ratelimiting
 import io.lemonlabs.uri.Url
 import org.scalacheck.Gen
 
+import java.time.Duration
+import java.time.temporal.TemporalAmount
+
 object Generators:
   val shortAlphaNumStr: Gen[String] =
     for
       len <- Gen.choose(1, 20)
       s <- Gen.stringOfN(len, Gen.alphaNumChar)
     yield s
+
+  val temporalAmount: Gen[TemporalAmount] =
+    Gen.long.map(Duration.ofMillis)
 
   val url: Gen[Url] =
     for
